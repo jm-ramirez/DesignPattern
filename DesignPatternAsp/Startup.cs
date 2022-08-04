@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tools.Earn;
 
 namespace DesignPatternAsp
 {
@@ -28,6 +29,20 @@ namespace DesignPatternAsp
 
             //INYECCION DE DEPENDENCIAS - Se inyecta el objeto MyConfig obtenido de la configuracion para ser utilizado e cualquier controlador
             services.Configure<MyConfig>(Configuration.GetSection("MyConfig"));
+            
+            services.AddTransient((factory) =>
+            {
+                return new LocalEarnFactory(Configuration
+                    .GetSection("MyConfig").GetValue<decimal>("LocalPercentage"));
+            });
+
+            services.AddTransient((factory) =>
+            {
+                return new ForeignEarnFactory(Configuration
+                    .GetSection("MyConfig").GetValue<decimal>("ForeignPercentage"), 
+                    Configuration.GetSection("MyConfig")
+                    .GetValue<decimal>("Extra"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,4 +1,5 @@
-﻿using DesignPattern.FactoryMethodPattern;
+﻿using DesignPattern.DependencyInjectionPattern;
+using DesignPattern.FactoryMethodPattern;
 using System;
 
 namespace DesignPattern
@@ -26,6 +27,13 @@ namespace DesignPattern
 
             ISale sale2 = internetSaleFactory.GetSale();
             sale2.Sell(15);
+
+            //DEPENDENCY INJECTION - En principio trata sobre quitar la responsabilidad de una clase de crear objetos a partir de otras clases.
+            //Además viene a resolver uno de los principios SOLID, el PRINCIPIO DE LA INVERSION DE LA DEPENDENCIA, que es practicamente que no se debe depender
+            //de implementaciones, pero si de abstracciones. Es decir, tu clase no deberia depender de como crear las cosas y simplemente recibir las cosas ya hechas.
+            var beer = new Beer("Pikantus", "Erdinger");
+            var drinkWithBeer = new DrinkWithBeer(10, 1, beer);
+            drinkWithBeer.Build();
 
         }
     }
