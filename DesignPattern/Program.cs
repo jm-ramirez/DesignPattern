@@ -2,6 +2,7 @@
 using DesignPattern.FactoryMethodPattern;
 using DesignPattern.Models;
 using DesignPattern.RepositoryPattern;
+using DesignPattern.UnitOfWorkPattern;
 using System;
 using System.Linq;
 
@@ -38,12 +39,12 @@ namespace DesignPattern
             var drinkWithBeer = new DrinkWithBeer(10, 1, beer1);
             drinkWithBeer.Build();
 
-            //REPOSITORY - Basicamente trata de ser un intermediario entre el manejo de la data y el framework o dominio.
-            //En este caso utilizo Repository para hacer de conexion entre la aplicacion y entity framework.
-            //Se implementa ademas GENERIC - que es hacer que una clase se comporte igual para distintas fuentes de modelo. En este caso, Repository, se 
-            //utiliza para hacer el modelado de las clases Beer y Brand.
             using(var context = new DesignPatternsContext())
             {
+                //REPOSITORY - Basicamente trata de ser un intermediario entre el manejo de la data y el framework o dominio.
+                //En este caso utilizo Repository para hacer de conexion entre la aplicacion y entity framework.
+                //Se implementa ademas GENERIC - que es hacer que una clase se comporte igual para distintas fuentes de modelo. En este caso, Repository, se 
+                //utiliza para hacer el modelado de las clases Beer y Brand.
                 var beerRepository = new Repository<Models.Beer>(context);
                 var beer = new Models.Beer() { BeerId = 1, Name = "Corona", Style = "Pilsner" };
                 beerRepository.Add(beer);
@@ -63,8 +64,28 @@ namespace DesignPattern
                 {
                     Console.WriteLine(b.Name);
                 }
-            }
 
+                //UNIT OF WORK - Es una forma de agrupar Repositorios y lo que nos sugiere este patron es que si tenemos un conjunto de peticiones en la base de datos,
+                //podemos agruparlas y enviarlas todas juntas, ahorrandonos solicitudes por cada interaccion.
+                var unitOfWork = new UnitOfWork(context);
+
+                var beers = unitOfWork.Beers;
+                var beer2 = new Models.Beer()
+                {
+                    Name = "Fuller",
+                    Style = "Porter"
+                };
+                beers.Add(beer2);
+
+                var brands = unitOfWork.Brands;
+                var brand2 = new Models.Brand()
+                {
+                    Name = "Fuller"
+                };
+                brands.Add(brand2);
+
+                unitOfWork.Save();
+            }
         }
     }
 }

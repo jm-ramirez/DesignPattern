@@ -54,6 +54,7 @@ namespace DesignPatternAsp
 
             //Inyecto la clase Repository para poder utilizarla en todos los controladores
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
