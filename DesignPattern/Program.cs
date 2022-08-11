@@ -2,6 +2,7 @@
 using DesignPattern.FactoryMethodPattern;
 using DesignPattern.Models;
 using DesignPattern.RepositoryPattern;
+using DesignPattern.StrategyPattern;
 using DesignPattern.UnitOfWorkPattern;
 using System;
 using System.Linq;
@@ -41,51 +42,62 @@ namespace DesignPattern
 
             using(var context = new DesignPatternsContext())
             {
-                //REPOSITORY - Basicamente trata de ser un intermediario entre el manejo de la data y el framework o dominio.
-                //En este caso utilizo Repository para hacer de conexion entre la aplicacion y entity framework.
-                //Se implementa ademas GENERIC - que es hacer que una clase se comporte igual para distintas fuentes de modelo. En este caso, Repository, se 
-                //utiliza para hacer el modelado de las clases Beer y Brand.
-                var beerRepository = new Repository<Models.Beer>(context);
-                var beer = new Models.Beer() { BeerId = 1, Name = "Corona", Style = "Pilsner" };
-                beerRepository.Add(beer);
-                beerRepository.Save();
+                ////REPOSITORY - Basicamente trata de ser un intermediario entre el manejo de la data y el framework o dominio.
+                ////En este caso utilizo Repository para hacer de conexion entre la aplicacion y entity framework.
+                ////Se implementa ademas GENERIC - que es hacer que una clase se comporte igual para distintas fuentes de modelo. En este caso, Repository, se 
+                ////utiliza para hacer el modelado de las clases Beer y Brand.
+                
+                //var beerRepository = new Repository<Models.Beer>(context);
+                //var beer = new Models.Beer() { BeerId = 1, Name = "Corona", Style = "Pilsner" };
+                //beerRepository.Add(beer);
+                //beerRepository.Save();
 
-                foreach (var b in beerRepository.Get())
-                {
-                    Console.WriteLine(b.Name);
-                }
+                //foreach (var b in beerRepository.Get())
+                //{
+                //    Console.WriteLine(b.Name);
+                //}
 
-                var brandRepository = new Repository<Brand>(context);
-                var brand = new Brand() { BrandId = 1, Name = "Fuller" };
-                brandRepository.Add(brand);
-                brandRepository.Save();
+                //var brandRepository = new Repository<Brand>(context);
+                //var brand = new Brand() { BrandId = 1, Name = "Fuller" };
+                //brandRepository.Add(brand);
+                //brandRepository.Save();
 
-                foreach (var b in brandRepository.Get())
-                {
-                    Console.WriteLine(b.Name);
-                }
+                //foreach (var b in brandRepository.Get())
+                //{
+                //    Console.WriteLine(b.Name);
+                //}
 
-                //UNIT OF WORK - Es una forma de agrupar Repositorios y lo que nos sugiere este patron es que si tenemos un conjunto de peticiones en la base de datos,
-                //podemos agruparlas y enviarlas todas juntas, ahorrandonos solicitudes por cada interaccion.
-                var unitOfWork = new UnitOfWork(context);
+                ////UNIT OF WORK - Es una forma de agrupar Repositorios y lo que nos sugiere este patron es que si tenemos un conjunto de peticiones en la base de datos,
+                ////podemos agruparlas y enviarlas todas juntas, ahorrandonos solicitudes por cada interaccion.
+                //var unitOfWork = new UnitOfWork(context);
 
-                var beers = unitOfWork.Beers;
-                var beer2 = new Models.Beer()
-                {
-                    Name = "Fuller",
-                    Style = "Porter"
-                };
-                beers.Add(beer2);
+                //var beers = unitOfWork.Beers;
+                //var beer2 = new Models.Beer()
+                //{
+                //    Name = "Fuller",
+                //    Style = "Porter"
+                //};
+                //beers.Add(beer2);
 
-                var brands = unitOfWork.Brands;
-                var brand2 = new Models.Brand()
-                {
-                    Name = "Fuller"
-                };
-                brands.Add(brand2);
+                //var brands = unitOfWork.Brands;
+                //var brand2 = new Models.Brand()
+                //{
+                //    Name = "Fuller"
+                //};
+                //brands.Add(brand2);
 
-                unitOfWork.Save();
+                //unitOfWork.Save();
             }
+
+            //STRATEGY - es un patrón de diseño de comportamiento que convierte un grupo de comportamientos en objetos y los hace intercambiables dentro del objeto de contexto original.
+            //El objeto original, llamado contexto, contiene una referencia a un objeto de estrategia y le delega la ejecución del comportamiento.
+            //Para cambiar la forma en que el contexto realiza su trabajo, otros objetos pueden sustituir el objeto de estrategia actualmente vinculado, por otro.
+            //En este patron, se estan haciendo dos practicas del principio SOLID, uno es el pricipio de responsabilidad unica, 
+            //y otro principio es el de abierto cerrado, que nos dice que una clase deberia estar abierta a extension pero cerrada para modificacion.
+            var context2 = new Context(new CarStrategy());
+            context2.Run();
+            context2.Strategy = new MotoStrategy();
+            context2.Run();
         }
     }
 }
