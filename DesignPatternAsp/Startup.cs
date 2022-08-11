@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tools.Earn;
+using Tools.Generator;
 
 namespace DesignPatternAsp
 {
@@ -55,6 +56,7 @@ namespace DesignPatternAsp
             //Inyecto la clase Repository para poder utilizarla en todos los controladores
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<GeneratorConcreteBuild>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

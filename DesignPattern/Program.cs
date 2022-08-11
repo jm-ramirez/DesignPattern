@@ -1,10 +1,12 @@
-﻿using DesignPattern.DependencyInjectionPattern;
+﻿using DesignPattern.BuilderPattern;
+using DesignPattern.DependencyInjectionPattern;
 using DesignPattern.FactoryMethodPattern;
 using DesignPattern.Models;
 using DesignPattern.RepositoryPattern;
 using DesignPattern.StrategyPattern;
 using DesignPattern.UnitOfWorkPattern;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DesignPattern
@@ -98,6 +100,17 @@ namespace DesignPattern
             context2.Run();
             context2.Strategy = new MotoStrategy();
             context2.Run();
+
+            //BUILDER PATTERN - es un patrón de diseño creacional que permite construir objetos complejos paso a paso.
+            //Resulta especialmente útil cuando debes crear un objeto con muchas opciones posibles de configuración.
+            var builder = new PreparedAlcoholicDrinkConcretedBuilder();
+            var barmanDirector = new BarmanDirector(builder);
+
+            barmanDirector.PrepareMargerita();
+
+            var preparedBuilder = builder.GetPreparedDrink();
+
+            Console.WriteLine(preparedBuilder.Result);
         }
     }
 }
